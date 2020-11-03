@@ -20,10 +20,17 @@ export default class App extends Component {
     ],
     todoValue: "",
     showErrorMessage: false,
+    showNoTodosMessage: false,
   };
 
   handleInputChange = (event) => {
     //console.log(event.target.name, event.target.value);
+
+    if (this.state.showErrorMessage) {
+      this.setState({
+        showErrorMessage: false,
+      });
+    }
 
     this.setState({
       [event.target.name]: event.target.value,
@@ -32,6 +39,13 @@ export default class App extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+
+    if (this.state.todoValue.length === 0) {
+      this.setState({
+        showErrorMessage: true,
+      });
+      return;
+    }
 
     let newTodoObj = {
       id: uuidv4(),
@@ -42,10 +56,19 @@ export default class App extends Component {
     // let newArray = [...this.state.todoList];
     // newArray.push(newTodoObj);
 
-    this.setState({
-      todoList: newArray,
-      todoValue: "",
-    });
+    this.setState(
+      {
+        todoList: newArray,
+        todoValue: "",
+      },
+      () => {
+        if (this.state.todoList.length > 0) {
+          this.setState({
+            showNoTodosMessage: false,
+          });
+        }
+      }
+    );
   };
 
   // showTodoList = () => {
@@ -58,12 +81,46 @@ export default class App extends Component {
     console.log("Add Func");
   };
 
+  appHandleDeleteTodo = (targetID) => {
+    //console.log("ID: ", id);
+
+    let copiedArray = [...this.state.todoList];
+
+    let filteredArray = copiedArray.filter(({ id }) => {
+      return id !== targetID;
+    });
+
+    this.setState(
+      {
+        todoList: filteredArray,
+      },
+      () => {
+        // console.log("-----" + "inside setState");
+        if (this.state.todoList.length === 0) {
+          this.setState({
+            showNoTodosMessage: true,
+          });
+        }
+      }
+    );
+    // console.log("outside setSTate");
+    // if (this.state.todoList.length === 0) {
+    //   this.setState({
+    //     showNoTodosMessage: true,
+    //   });
+    // }
+  };
+
   render() {
-    const { todoList, showErrorMessage } = this.state;
+    const { todoList, showErrorMessage, showNoTodosMessage } = this.state;
 
     return (
       <div style={{ textAlign: "center" }}>
-        {showErrorMessage ? <div>Please, enter something todo!</div> : null}
+        {showErrorMessage ? (
+          <div style={{ color: "red", marginTop: 10 }}>
+            Please, enter something todo!
+          </div>
+        ) : null}
         <input
           onChange={this.handleInputChange}
           style={{ marginTop: 20 }}
@@ -78,15 +135,22 @@ export default class App extends Component {
             return <li key={id}>{todo}</li>;
           })}
         </ul> */}
-        <TodoView
-          todoList={todoList}
-          nameString={"Hamster"}
-          age={123}
-          arrayObject={[1, 2, 3]}
-          trueOrFalse={false}
-          addFunc={this.addFunc}
-          obj={{ 1: 1, 2: 2, 3: 3 }}
-        />
+        {showNoTodosMessage ? (
+          <div style={{ marginTop: 10, color: "blue" }}>
+            Please add something to do!
+          </div>
+        ) : (
+          <TodoView
+            todoList={todoList}
+            appHandleDeleteTodo={this.appHandleDeleteTodo}
+            // nameString={"Hamster"}
+            // age={123}
+            // arrayObject={[1, 2, 3]}
+            // trueOrFalse={false}
+            // addFunc={this.addFunc}
+            // obj={{ 1: 1, 2: 2, 3: 3 }}
+          />
+        )}
       </div>
     );
   }
