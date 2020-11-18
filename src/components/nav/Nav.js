@@ -32,34 +32,34 @@ export default class Nav extends Component {
     }
     }
 
-    componentDidUpdate(prevState, prevProps){
-        // console.log("prevState", prevState)
-        // console.log("prevProps", prevProps)
-        if(this.props.user !== prevState.user &&
-            this.props.isAuth !== prevState.isAuth){
-                console.log(this)
-                this.setState({
-                    isAuth: this.props.isAuth,
-                    user:{
-                        email: this.props.user.email,
-                        _id: this.props.user._id,
-                    },
-                });
-            }
-    }
-      
+    // componentDidUpdate(prevState, prevProps){
+    //     // console.log("prevState", prevState)
+    //     // console.log("prevProps", prevProps)
+    //     if(this.props.user !== prevState.user &&
+    //         this.props.isAuth !== prevState.isAuth){
+    //             console.log(this)
+    //             this.setState({
+    //                 isAuth: this.props.isAuth,
+    //                 user:{
+    //                     email: this.props.user.email,
+    //                     _id: this.props.user._id,
+    //                 },
+    //             });
+    //         }
+    // }
+
     
 
-    logout = ()=>{
-        localStorage.removeItem("jwtToken")
-
+    logout = () => {
+        localStorage.removeItem("jwtToken");
         this.props.logout();
-    }
+    };
 
     render() {
-        let nav;
+        let nav
+        // const{isAuth, user}= this.props
 
-        if (this.state.isAuth && this.state.user !== null) {
+        if (this.props.isAuth && this.props.user !== null) {
             nav = (
                 <div>
                     <ul style={{listStyle: "none"}}>
@@ -69,7 +69,7 @@ export default class Nav extends Component {
                             marginRight: 20,
                         }}>
                             <Link to="/profile" style={{ textDecoration: "none"}}>
-                                {this.state.user.email}
+                                {this.props.user.email}
                             </Link>
                         </li>
                         <li  style={{display: "inline"}}>

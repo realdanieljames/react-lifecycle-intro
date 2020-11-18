@@ -7,6 +7,7 @@ import Signin from "./components/signin/Signin";
 import Todo from "./components/Todo/Todo";
 import Home from "./components/home/home";
 import Nav from "./components/nav/Nav";
+import PrivateRoute from "./components/shared/PrivateRoute"
 
 import "./App.css";
 
@@ -18,15 +19,15 @@ class App extends Component {
   }
 
   auth = (jwtToken)=>{
-   let decoded =  jwtDecode(jwtToken);
+  let decoded =  jwtDecode(jwtToken);
 
-   this.setState({
-     isAuth: true,
-     user:{
-       email: decoded.email,
-       _id: decoded._id,
-     },
-   });
+  this.setState({
+    isAuth: true,
+    user:{
+      email: decoded.email,
+      _id: decoded._id,
+    },
+  });
   };
 
   logout =()=> {
@@ -40,12 +41,18 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <Nav isAuth={this.state.isAuth} user={this.state.user}/>
+        <Nav isAuth={this.state.isAuth} user={this.state.user} logout={this.logout}/>
 
         <Switch>
           <Route exact path="/sign-up"  component={Signup}/>
           <Route exact path="/sign-in"  component={(props)=> <Signin {...props} auth={this.auth}/>}/>
           <Route exact path="/todo"  component={Todo}/>
+          <PrivateRoute 
+            exact path="/todo"
+            isAuth={this.state.isAuth}
+            user={this.state.user}
+            component={Todo}
+          />
           <Route exact path="/"  component={Home}/>
         </Switch>
       </Router>
