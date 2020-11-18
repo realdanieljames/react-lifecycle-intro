@@ -32,13 +32,28 @@ export default class Nav extends Component {
     }
     }
 
+    componentDidUpdate(prevState, prevProps){
+        // console.log("prevState", prevState)
+        // console.log("prevProps", prevProps)
+        if(this.props.user !== prevState.user &&
+            this.props.isAuth !== prevState.isAuth){
+                console.log(this)
+                this.setState({
+                    isAuth: this.props.isAuth,
+                    user:{
+                        email: this.props.user.email,
+                        _id: this.props.user._id,
+                    },
+                });
+            }
+    }
+      
+    
+
     logout = ()=>{
         localStorage.removeItem("jwtToken")
 
-        this.setState({
-            isAuth:  false,
-            user: null,
-        })
+        this.props.logout();
     }
 
     render() {

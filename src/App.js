@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-
+import jwtDecode from "jwt-decode"
 
 import Signup from "./components/signup/Signup";
 import Signin from "./components/signin/Signin";
@@ -16,16 +16,37 @@ class App extends Component {
     isAut: false,
     user:null,
   }
+
+  auth = (jwtToken)=>{
+   let decoded =  jwtDecode(jwtToken);
+
+   this.setState({
+     isAuth: true,
+     user:{
+       email: decoded.email,
+       _id: decoded._id,
+     },
+   });
+  };
+
+  logout =()=> {
+    this.setState({
+      isAuth: false,
+      user: null,
+    })
+  }
+
+
   render() {
     return (
       <Router>
-        <Nav />
+        <Nav isAuth={this.state.isAuth} user={this.state.user}/>
 
         <Switch>
-          <Route path="/sign-up"  component={Signup}/>
-          <Route path="/sign-in"  component={Signin}/>
-          <Route path="/todo"  component={Todo}/>
-          <Route path="/"  component={Home}/>
+          <Route exact path="/sign-up"  component={Signup}/>
+          <Route exact path="/sign-in"  component={(props)=> <Signin {...props} auth={this.auth}/>}/>
+          <Route exact path="/todo"  component={Todo}/>
+          <Route exact path="/"  component={Home}/>
         </Switch>
       </Router>
     )

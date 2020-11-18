@@ -79,11 +79,6 @@ export default class Todo extends Component {
     );
   };
 
-  // showTodoList = () => {
-  //   return this.state.todoList.map(({ id, todo }) => {
-  //     return <li key={id}>{todo}</li>;
-  //   });
-  // };
 
   addFunc = () => {
     console.log("Add Func");

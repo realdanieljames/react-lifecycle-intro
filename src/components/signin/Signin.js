@@ -26,6 +26,7 @@ successMessage: "",
 
 componentDidMount(){
     let token = localStorage.getItem("jwtToken")
+    // this.props.auth(success.data.jwtToken);
 
     if(token !== null){        
     
@@ -133,7 +134,7 @@ try {
         password: password,
     }
     );
-    console.log(success)
+
 
     localStorage.setItem("jwtToken", success.data.jwtToken)
 
@@ -142,6 +143,7 @@ try {
     errorMessage: '',
     isAuth: true,
     }, ()=>{
+        this.props.auth(success.data.jwtToken);
         this.props.history.push("/todo")
     });
 } catch (e) {
@@ -174,7 +176,7 @@ try {
 
 //==============================================================================================//
 //==============================================================================================//
-auth =()=>{}
+// auth =()=>{}
 
 
 //==============================================================================================//
