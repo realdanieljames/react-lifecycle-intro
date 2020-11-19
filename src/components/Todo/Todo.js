@@ -1,28 +1,30 @@
 import React, { Component } from "react";
-
-import { v4 as uuidv4 } from "uuid";
+import axios from 'axios'
 import jwtDecode from "jwt-decode"
+
+
 import TodoView from "./TodoView";
+
 
 
 export default class Todo extends Component {
   state = {
     todoList: [
-      {
-        id: uuidv4(),
-        todo: "Walk the dog",
-        editToggle: false,
-      },
-      {
-        id: uuidv4(),
-        todo: "Buy Milk",
-        editToggle: false,
-      },
-      {
-        id: uuidv4(),
-        todo: "Clean shorts",
-        editToggle: false,
-      },
+      // {
+      //   id: uuidv4(),
+      //   todo: "Walk the dog",
+      //   editToggle: false,
+      // },
+      // {
+      //   id: uuidv4(),
+      //   todo: "Buy Milk",
+      //   editToggle: false,
+      // },
+      // {
+      //   id: uuidv4(),
+      //   todo: "Clean shorts",
+      //   editToggle: false,
+      // },
     ],
     todoValue: "",
     showErrorMessage: false,
@@ -47,6 +49,26 @@ export default class Todo extends Component {
   //     this.props.history.push("/sign-in")
   //   }
   // }
+//==============================================================================================//
+//==============================================================================================//
+
+  async componentDidMount(){
+
+  let jwtToken = localStorage.getItem("jwtToken");
+  let decoded = jwtDecode(jwtToken)
+    try{
+      let allUserTodos = await axios.get(
+        `http://localhost:3003/api/todo/get-user-all-todos/${decoded._id}`
+      );
+      this.setState({
+        todoList: allUserTodos.data.todos,
+      });
+    }catch(e){
+      console.log(e);
+    }
+  }
+//==============================================================================================//
+//==============================================================================================//
 
   handleInputChange = (event) => {
     //console.log(event.target.name, event.target.value);
@@ -61,8 +83,10 @@ export default class Todo extends Component {
       [event.target.name]: event.target.value,
     });
   };
+//==============================================================================================//
+//==============================================================================================//
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
 
     if (this.state.todoValue.length === 0) {
@@ -72,29 +96,44 @@ export default class Todo extends Component {
       return;
     }
 
-    let newTodoObj = {
-      id: uuidv4(),
+  let jwtToken = localStorage.getItem("jwtToken");
+  let decoded = jwtDecode(jwtToken)
+  
+  try{
+    // console.log(this.decoded._id)
+  let createdTodo = await axios.post(
+    "http://localhost:3003/api/todo/create-todo",
+    {
       todo: this.state.todoValue,
-    };
-
-    let newArray = [...this.state.todoList, newTodoObj];
-    // let newArray = [...this.state.todoList];
-    // newArray.push(newTodoObj);
-
-    this.setState(
-      {
-        todoList: newArray,
-        todoValue: "",
-      },
-      () => {
-        if (this.state.todoList.length > 0) {
-          this.setState({
-            showNoTodosMessage: false,
-          });
-        }
+      _id: decoded._id,
+    }
+  );
+  
+  // console.log(createdTodo)
+  
+  let newArray = [...this.state.todoList, createdTodo.data];
+  // let newArray = [...this.state.todoList];
+  // newArray.push(newTodoObj);
+  
+  this.setState(
+    {
+      todoList: newArray,
+      todoValue: "",
+    },
+    () => {
+      if (this.state.todoList.length > 0) {
+        this.setState({
+          showNoTodosMessage: false,
+        });
       }
-    );
-  };
+      }
+      );
+    } catch(e){
+      console.log(e)
+    }
+  }
+//==============================================================================================//
+//==============================================================================================//
 
 
   addFunc = () => {

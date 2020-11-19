@@ -18,6 +18,28 @@ class App extends Component {
     user:null,
   }
 
+   componentDidMount(){
+        let token = localStorage.getItem("jwtToken")
+
+        if(token !== null){        
+        
+            let decoded =  jwtDecode(token);
+            let currentTime = Date.now()/1000;
+        
+            if(decoded.exp < currentTime){
+                localStorage.removeItem("jwtToken")
+            } else {
+                this.setState({
+                    isAuth: true,
+                    user: {
+                        email: decoded.email,
+                        _id: decoded._id
+                    },
+                });
+            }
+    }
+    }
+
   auth = (jwtToken)=>{
   let decoded =  jwtDecode(jwtToken);
 

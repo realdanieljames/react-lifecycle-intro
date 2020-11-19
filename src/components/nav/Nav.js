@@ -5,32 +5,32 @@ import jwtDecode from "jwt-decode";
 
 export default class Nav extends Component {
 
-    state = {
-        isAuth: false,
-        user: null,
-    };
+    // state = {
+    //     isAuth: false,
+    //     user: null,
+    // };
 
-    componentDidMount(){
-        let token = localStorage.getItem("jwtToken")
+    // componentDidMount(){
+    //     let token = localStorage.getItem("jwtToken")
 
-        if(token !== null){        
+    //     if(token !== null){        
         
-            let decoded =  jwtDecode(token);
-            let currentTime = Date.now()/1000;
+    //         let decoded =  jwtDecode(token);
+    //         let currentTime = Date.now()/1000;
         
-            if(decoded.exp < currentTime){
-                localStorage.removeItem("jwtToken")
-            } else {
-                this.setState({
-                    isAuth: true,
-                    user: {
-                        email: decoded.email,
-                        _id: decoded._id
-                    },
-                });
-            }
-    }
-    }
+    //         if(decoded.exp < currentTime){
+    //             localStorage.removeItem("jwtToken")
+    //         } else {
+    //             this.setState({
+    //                 isAuth: true,
+    //                 user: {
+    //                     email: decoded.email,
+    //                     _id: decoded._id
+    //                 },
+    //             });
+    //         }
+    // }
+    // }
 
     // componentDidUpdate(prevState, prevProps){
     //     // console.log("prevState", prevState)

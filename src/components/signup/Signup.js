@@ -144,7 +144,7 @@ handleOnSubmit = async (event) => {
 
     try {
     let success = await axios.post(
-        "http://localhost:3000/api/users/create-user",
+        "http://localhost:3003/api/users/create-user",
         {
         email: email,
         password: password,
