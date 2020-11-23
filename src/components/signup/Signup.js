@@ -150,6 +150,7 @@ handleOnSubmit = async (event) => {
         password: password,
         }
     );
+    console.log(success)
     this.setState({
         isSuccessMessage: true,
         successMessage: success.data.message,

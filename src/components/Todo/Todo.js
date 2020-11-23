@@ -60,6 +60,7 @@ export default class Todo extends Component {
       let allUserTodos = await axios.get(
         `http://localhost:3003/api/todo/get-user-all-todos/${decoded._id}`
       );
+
       this.setState({
         todoList: allUserTodos.data.todos,
       });
@@ -98,9 +99,10 @@ export default class Todo extends Component {
 
   let jwtToken = localStorage.getItem("jwtToken");
   let decoded = jwtDecode(jwtToken)
+
   
   try{
-    // console.log(this.decoded._id)
+
   let createdTodo = await axios.post(
     "http://localhost:3003/api/todo/create-todo",
     {
@@ -136,25 +138,46 @@ export default class Todo extends Component {
 //==============================================================================================//
 
 
-  addFunc = () => {
-    console.log("Add Func");
-  };
+addFunc = () => {
+  console.log("Add Func");
+};
+//==============================================================================================//
+//==============================================================================================//
 
-  appHandleDeleteTodo = (targetID) => {
+  appHandleDeleteTodo = async (targetID) => {
     //console.log("ID: ", id);
+    let jwtToken = localStorage.getItem("jwtToken");
+    let decoded = jwtDecode(jwtToken)
+    targetID = decoded._id
+    
 
+    try{
+      let deletedTodo = await axios.delete(`http://localhost:3003/api/todo/delete-todo/${decoded._id}`,
+      {
+        _id: decoded._id
+      }
+      )
+      console.log(deletedTodo)
+    }catch(e){
+      console.log(e);
+    }
+    
+    
     let copiedArray = [...this.state.todoList];
-
-    let filteredArray = copiedArray.filter(({ id }) => {
-      return id !== targetID;
+    
+    let filteredArray = copiedArray.filter(({ _id }) => {
+      console.log(targetID)
+      return _id !== targetID;
     });
+
+
 
     this.setState(
       {
         todoList: filteredArray,
       },
       () => {
-        // console.log("-----" + "inside setState");
+        // console.log(this.state.todoList);
         if (this.state.todoList.length === 0) {
           this.setState({
             showNoTodosMessage: true,

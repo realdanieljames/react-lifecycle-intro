@@ -35,7 +35,7 @@ const TodoView = ({
                 <input
                   type="text"
                   value={editValue}
-                  name="editValue"
+                  // name="editValue"
                   onChange={(event) => appHandleOnChange(event)}
                   //onChange={appHandleOnChange()}
                 />
@@ -108,7 +108,7 @@ const TodoView = ({
 TodoView.propTypes = {
   todoList: arrayOf(
     shape({
-      id: string.isRequired,
+      _id: string.isRequired,
       todo: string.isRequired,
     })
   ),
