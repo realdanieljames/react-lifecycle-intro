@@ -151,10 +151,18 @@ handleOnSubmit = async (event) => {
         }
     );
     console.log(success)
+
+    localStorage.setItem("jwtToken", success.data.jwtToken)
+
     this.setState({
         isSuccessMessage: true,
         successMessage: success.data.message,
-    });
+        isAuth: true, 
+    }
+    // ()=>{
+    //         this.props.auth(success.data.jwtToken);
+    //         this.props.history.push("/todo")
+    );
     console.log("success");
     } catch (e) {
     if (e && e.response.status === 409) {

@@ -145,7 +145,8 @@ try {
     }, ()=>{
         this.props.auth(success.data.jwtToken);
         this.props.history.push("/todo")
-    });
+    }
+    );
 } catch (e) {
     //console.log(e.response);
     // console.log(e.response.status);

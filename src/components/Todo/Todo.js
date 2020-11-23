@@ -152,40 +152,43 @@ addFunc = () => {
     
 
     try{
-      let deletedTodo = await axios.delete(`http://localhost:3003/api/todo/delete-todo/${decoded._id}`,
+      let deletedID = await axios.delete(`http://localhost:3003/api/todo/delete-todo/`,
       {
-        _id: decoded._id
+        data: {
+          userID: decoded._id,
+          todoID: targetID,
+        },
       }
-      )
-      console.log(deletedTodo)
+      );
+
+      let copiedArray = [...this.state.todoList];
+    
+      let filteredArray = copiedArray.filter(({ _id }) => {
+  
+        return _id !== deletedID.data;
+      });
+  
+
+      this.setState(  
+        {
+          todoList: filteredArray,
+        },
+        () => {
+          // console.log(this.state.todoList);
+          if (this.state.todoList.length === 0) {
+            this.setState({
+              showNoTodosMessage: true,
+            });
+          }
+        }
+      );
+
+
+
     }catch(e){
       console.log(e);
     }
-    
-    
-    let copiedArray = [...this.state.todoList];
-    
-    let filteredArray = copiedArray.filter(({ _id }) => {
-      console.log(targetID)
-      return _id !== targetID;
-    });
-
-
-
-    this.setState(
-      {
-        todoList: filteredArray,
-      },
-      () => {
-        // console.log(this.state.todoList);
-        if (this.state.todoList.length === 0) {
-          this.setState({
-            showNoTodosMessage: true,
-          });
-        }
-      }
-    );
-    // console.log("outside setSTate");
+      // console.log("outside setSTate");
     // if (this.state.todoList.length === 0) {
     //   this.setState({
     //     showNoTodosMessage: true,
